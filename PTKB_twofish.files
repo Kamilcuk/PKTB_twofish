@@ -1,3 +1,7 @@
 main.cpp
 twofish.cpp
 twofish.hpp
+SConstruct
+SConstruct
+twofishtest.hpp
+twofishtest.cpp

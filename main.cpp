@@ -1,8 +1,11 @@
 #include <stdio.h>
-#include "twofish.hpp"
+#include "twofishtest.hpp"
+
+
 
 int main(int argc, char *argv[])
 {
-    Twofish t;
-    return 0;
+    TwofishTest t;
+    t.runTests();
+	return 0;
 }
