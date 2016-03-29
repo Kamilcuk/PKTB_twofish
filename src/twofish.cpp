@@ -226,12 +226,29 @@ static ulong32 g_func(ulong32 x, Twofish::Key  *key)
 
 /** ------------------------------------------------------------------------------------------ */
 
-Twofish::Twofish(const unsigned char *_key, int keylen) :
-    skey(&key)
+Twofish::Key Twofish::getKey() const
 {
-    if ( _key && keylen != 0 ) {
-        key_setup(_key, keylen);
-    }
+    return real_key;
+}
+
+void Twofish::setKey(const Key &value)
+{
+    real_key = value;
+}
+
+Twofish::Twofish(const unsigned char *_key, int keylen) :
+    skey(&real_key)
+{
+    key_setup(_key, keylen);
+}
+
+Twofish::~Twofish()
+{
+    /* erase key to zero state */
+    memset(this->skey, 0, sizeof(*this->skey));
+    memset(this->skey, 0, sizeof(*this->skey));
+    memset(this->skey, 0, sizeof(*this->skey));
+    memset(this->skey, 0, sizeof(*this->skey));
 }
 
 void Twofish::key_setup(const unsigned char *_key, int keylen)

@@ -25,6 +25,7 @@ public:
 
     void encrypt(std::istream &in, std::ostream &out);
     void decrypt(std::istream &in, std::ostream &out);
+    void czytaj(std::istream &in, unsigned char plaintext[], int len);
 };
 
 #endif // SZYFROWANIE_HPP

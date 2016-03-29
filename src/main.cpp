@@ -8,8 +8,8 @@
 std::ofstream outputFile;
 std::ifstream inputFile;
 std::ifstream keyFile;
-Szyfrowanie szyfrowanie(0,0);
 bool szyfruj = true;
+Szyfrowanie szyfrowanie;
 
 static void parse_cmd(int argc, char *argv[])
 {

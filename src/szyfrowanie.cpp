@@ -55,6 +55,15 @@ void memrand(unsigned char *a,const int len)
         a[i]=rand()&0xff;
 }
 
+void Szyfrowanie::czytaj(std::istream &in, unsigned char plaintext[], int len) {
+    /* funckja czyta i parsuje do długości bloku (16 bajtów) */
+    in.read((char *)plaintext, 16);
+    len = in.gcount();
+    if ( len < 16 ) {
+        memset(&plaintext[len-1], 0, 16-len+1);
+    }
+}
+
 void Szyfrowanie::encrypt(std::istream &in, std::ostream &out)
 {
     unsigned char plaintext[16];
@@ -64,7 +73,7 @@ void Szyfrowanie::encrypt(std::istream &in, std::ostream &out)
     switch(tryb_) {
     case ECB:
         while( in ) {
-            in.read((char *)plaintext,16);
+            czytaj(in, plaintext, 16);
             twofish.encrypt(plaintext, ciphertext);
             out.write((char*)ciphertext,16);
         }
@@ -75,7 +84,7 @@ void Szyfrowanie::encrypt(std::istream &in, std::ostream &out)
         out.write((char*)vector,16);
 
         while( in ) {
-            in.read((char *)plaintext,16);
+            czytaj(in, plaintext, 16);
             /* xor with vector */
             memxor(plaintext, vector, 16);
             twofish.encrypt(plaintext, ciphertext);
@@ -90,7 +99,7 @@ void Szyfrowanie::encrypt(std::istream &in, std::ostream &out)
         out.write((char*)vector,16);
 
         while( in ) {
-            in.read((char *)plaintext,16);
+            czytaj(in, plaintext, 16);
             /* xor with vector */
             memxor(buff, plaintext, vector, 16);
             twofish.encrypt(buff, ciphertext);
@@ -107,7 +116,7 @@ void Szyfrowanie::encrypt(std::istream &in, std::ostream &out)
         while( in ) {
             twofish.encrypt(vector, buff);
 
-            in.read((char *)plaintext,16);
+            czytaj(in, plaintext, 16);
             memxor(ciphertext, buff, plaintext, 16);
 
             out.write((char *)ciphertext,16);
@@ -122,7 +131,7 @@ void Szyfrowanie::encrypt(std::istream &in, std::ostream &out)
         while( in ) {
             twofish.encrypt(vector, buff);
 
-            in.read((char *)plaintext,16);
+            czytaj(in, plaintext, 16);
             memxor(ciphertext, buff, plaintext, 16);
             out.write((char *)ciphertext,16);
 
@@ -134,18 +143,25 @@ void Szyfrowanie::encrypt(std::istream &in, std::ostream &out)
     }
 }
 
+#include <stdio.h>
 void Szyfrowanie::decrypt(std::istream &in, std::ostream &out)
 {
     unsigned char ciphertext[16];
     unsigned char plaintext[16];
     unsigned char vector[16];
     unsigned char buff[16];
+    int len = 0;
     switch(tryb_) {
     case ECB:
         while( in ) {
             in.read((char*)ciphertext,16);
+            if ( !in ) break;
+            len = in.gcount();
+            if ( len < 16 ) {
+                memset(&ciphertext[len+1], 0, 16-len);
+            }
             twofish.decrypt(ciphertext, plaintext);
-            out.write((char*)plaintext,16);
+            out.write((char*)plaintext,len);
         }
         break;
     case CBC:
@@ -154,11 +170,16 @@ void Szyfrowanie::decrypt(std::istream &in, std::ostream &out)
 
         while( in ) {
             in.read((char *)ciphertext,16);
+            if ( !in ) break;
+            len = in.gcount();
+            if ( len < 16 ) {
+                memset(&ciphertext[len+1], 0, 16-len);
+            }
             twofish.decrypt(ciphertext, plaintext);
             memxor(plaintext, vector, 16);
             out.write((char*)plaintext,16);
             /* next vetor */
-            memcpy(vector, ciphertext, 16);
+            memcpy(vector, ciphertext, len);
         }
         break;
     case PCBC:
@@ -167,6 +188,7 @@ void Szyfrowanie::decrypt(std::istream &in, std::ostream &out)
 
         while( in ) {
             in.read((char *)ciphertext,16);
+            if ( !in ) break;
             twofish.decrypt(ciphertext, plaintext);
             /* xor with vector */
             memxor(buff, plaintext, vector, 16);
@@ -183,6 +205,7 @@ void Szyfrowanie::decrypt(std::istream &in, std::ostream &out)
             twofish.encrypt(vector, buff);
 
             in.read((char *)ciphertext,16);
+            if ( !in ) break;
             /* xor with vector */
             memxor(plaintext, buff, ciphertext, 16);
             out.write((char *)plaintext,16);
@@ -197,7 +220,8 @@ void Szyfrowanie::decrypt(std::istream &in, std::ostream &out)
         while( in ) {
             twofish.encrypt(vector, buff);
 
-            in.read((char *)ciphertext,16);
+            in.read((char *)ciphertext,16).eof();
+            if ( !in ) break;
             /* xor with vector */
             memxor(plaintext, buff, ciphertext, 16);
             out.write((char *)plaintext,16);
