@@ -1,8 +1,8 @@
-main.cpp
-twofish.cpp
-twofish.hpp
+src/main.cpp
+src/twofish.cpp
+src/twofish.hpp
+src/twofishtest.hpp
+src/twofishtest.cpp
+src/szyfrowanie.hpp
+src/szyfrowanie.cpp
 SConstruct
-twofishtest.hpp
-twofishtest.cpp
-szyfrowanie.hpp
-szyfrowanie.cpp
