@@ -1,3 +1,13 @@
+<<<<<<< HEAD
+=======
+# programs
+raid-map
+map-gen
+restore
+phrase-gen
+
+
+>>>>>>> 2b40c77c6685097783d468de63c03b7646991549
 # Object files
 *.o
 *.ko
