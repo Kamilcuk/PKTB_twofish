@@ -1,12 +1,16 @@
-<<<<<<< HEAD
 # PTKB_twofish
 Project for university about twofish implementation for PTKB class.
-=======
-# mapraidgen
-Program used to create a mapping of sectors on a hardware raid. With this map you should be able to restore whole raid array after raid controller hardware failure.
 # Usage
-???
-# Compile
-make
+[USAGE] twofish [OPTION]...
+Program wykonuje szyfrowanie algorytmem twofish 
+ z zadanym trybem szyfrowania 
+	-k <file>	plik zawierający klucz
+	-i <file>	plik z wejściowym tekstem
+	-o <file>	plik z wyjściowym tekstem
+	-t  <ECB|CBC|CFB|OCB>	tryb szyfrowania blokowego
+	-e	szyfruj tekst (default)
+	-d	deszyfruj tekst
 
->>>>>>> 2b40c77c6685097783d468de63c03b7646991549
+# Compile
+scons
+

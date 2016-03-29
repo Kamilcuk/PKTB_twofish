@@ -6,3 +6,5 @@ src/twofishtest.cpp
 src/szyfrowanie.hpp
 src/szyfrowanie.cpp
 SConstruct
+test.sh
+
